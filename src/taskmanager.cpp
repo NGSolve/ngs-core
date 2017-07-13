@@ -98,8 +98,6 @@ namespace ngstd
     {
       num_threads = GetMaxThreads();
   
-      if (MyMPI_GetNTasks() > 1) num_threads = 1;
-
 #ifdef USE_NUMA
       numa_available();
       num_nodes = numa_max_node() + 1;

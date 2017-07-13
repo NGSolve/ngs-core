@@ -14,6 +14,7 @@
 #include <cstring>
 #include <climits>
 #include <thread>
+#include <functional>
 
 #ifdef __INTEL_COMPILER
 #ifdef WIN32
@@ -120,7 +121,6 @@ namespace ngstd {
 
 #include "autodiff.hpp"
 #include "taskmanager.hpp"
-#include "mpiwrapper.hpp"
 
 /// namespace for basic linear algebra
 namespace ngbla
