@@ -8,7 +8,7 @@
    data type BitArray
 */
 
-#include <ngstd.hpp>
+#include "ngs_core.hpp"
 
 namespace ngstd
 {
@@ -125,31 +125,5 @@ namespace ngstd
     for (size_t i = 0; i < Size(); i++)
       if (Test(i)) cnt++;
     return cnt;
-  }
-
-  Archive & operator & (Archive & archive, BitArray & ba)
-  {
-    if (archive.Output())
-      {
-        archive << ba.Size();
-        for (size_t i = 0; i < ba.Size(); i++)
-          archive << ba[i];
-      }
-    else
-      {
-        int size;
-        archive & size;
-        ba.SetSize (size);
-        ba.Clear();
-        for (size_t i = 0; i < size; i++)
-          {
-            bool b;
-            archive & b;
-            if (b) ba.Set(i);
-          }
-      }
-    return archive;
-  }
-
-  
+  }  
 }
