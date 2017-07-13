@@ -7,10 +7,6 @@
 /* Date:   10. Mar. 2015                                             */
 /*********************************************************************/
 
-#include <atomic>
-#include <thread>
-
-
 
 namespace ngstd
 {

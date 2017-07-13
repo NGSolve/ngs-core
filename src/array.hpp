@@ -11,7 +11,6 @@
 #define CHECK_RANGE
 #endif
 
-#include "tuple.hpp"
 
 namespace ngstd
 {
@@ -262,14 +261,6 @@ namespace ngstd
     s << "[" << ir.First() << "," << ir.Next() << ")";
     return s;
   }
-
-  template <typename ... ARGS>
-  ostream & operator<< (ostream & ost, Tuple<IntRange, ARGS...> tup)
-  {
-    ost << tup.Head() << ", " << tup.Tail();
-    return ost;
-  }
-
 
   template <typename T>
   inline ostream & operator<< (ostream & ost, const BaseArrayObject<T> & array)
@@ -823,13 +814,6 @@ namespace ngstd
       return *this;
     }
 
-    template <typename ...ARGS>
-    Array & operator= (Tuple<ARGS...> tup)
-    {
-      SetSize (ArraySize (tup));
-      StoreToArray (*this, tup);
-      return *this;
-    }
 
     Array & operator= (std::initializer_list<T> list)
     {
@@ -980,82 +964,6 @@ namespace ngstd
 
   };
 
-
-
-
-
-  template <typename ... ARGS>
-  size_t ArraySize (Tuple<ARGS...> tup)  
-  { return 0;}
-  
-  template <typename ... ARGS>
-  size_t ArraySize (Tuple<int,ARGS...> tup) 
-  { return 1+ArraySize(tup.Tail()); }
-  
-  template <typename ... ARGS>
-  size_t ArraySize (Tuple<IntRange,ARGS...> tup) 
-  { return tup.Head().Size()+ArraySize(tup.Tail()); }
-
-  
-  template <typename T, typename ... ARGS>
-  void StoreToArray (FlatArray<T> a, Tuple<ARGS...> tup) { ; }
-  
-  template <typename T, typename ... ARGS>
-  void StoreToArray (FlatArray<T> a, Tuple<int,ARGS...> tup)
-  {
-    a[0] = tup.Head();
-    StoreToArray (a.Range(1, a.Size()), tup.Tail());
-  }
-  
-  template <typename T, typename ... ARGS>
-  void StoreToArray (FlatArray<T> a, Tuple<IntRange,ARGS...> tup)
-  {
-    IntRange r = tup.Head();
-    a.Range(0,r.Size()) = r;
-    StoreToArray (a.Range(r.Size(), a.Size()), tup.Tail());
-  }
-
-  /*
-  template <typename T> template <typename ...ARGS>
-  INLINE Array<T> & Array<T> :: operator= (Tuple<ARGS...> tup)
-  {
-    SetSize (ArraySize (tup));
-    StoreToArray (*this, tup);
-  }
-  */
-
-  /*
-  /// append integers to array
-  inline Array<int> & operator+= (Array<int> & array, const IntRange & range)
-  {
-    int oldsize = array.Size();
-    int s = range.Next() - range.First();
-    
-    array.SetSize (oldsize+s);
-
-    for (int i = 0; i < s; i++)
-      array[oldsize+i] = range.First()+i;
-
-    return array;
-  }
-  */
-  
-
-  /*
-  template <typename T, typename T2>
-  inline Array<T> & operator+= (Array<T> & array, const BaseArrayObject<T2> & a2)
-  {
-    size_t oldsize = array.Size();
-    size_t s = a2.Spec().Size();
-    
-    array.SetSize (oldsize+s);
-
-    for (size_t i = 0; i < s; i++)
-      array[oldsize+i] = a2.Spec()[i];
-
-    return array;
-  }
-  */
   
   template <typename T, typename T2>
   inline Array<T> & operator+= (Array<T> & array, const BaseArrayObject<T2> & a2)
@@ -1289,26 +1197,6 @@ namespace ngstd
     return ar.Ptr()+i;
   }
   
-
-  template <typename T> 
-  Archive & operator & (Archive & archive, Array<T> & a)
-  {
-    if (archive.Output())
-      archive << a.Size();
-    else
-      {
-        size_t size;
-        archive & size;
-        a.SetSize (size);
-      }
-
-    /*
-    for (auto & ai : a)
-      archive & ai;
-    */
-    archive.Do (&a[0], a.Size());
-    return archive;
-  }
 }
 
 

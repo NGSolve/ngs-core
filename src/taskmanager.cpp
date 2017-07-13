@@ -4,11 +4,8 @@
 /* Date:   10. Mar. 2015                                            */
 /********************************************************************/
 
-#include <ngstd.hpp>
+#include "ngs_core.hpp"
 #include <thread>
-
-#include "taskmanager.hpp"
-#include "paje_interface.hpp"
 
 #ifdef USE_MKL
 #include <mkl.h>
@@ -43,7 +40,7 @@ namespace ngstd
 
     task_manager = new TaskManager();
 
-    cout << IM(3) << "task-based parallelization (C++11 threads) using "<< task_manager->GetNumThreads() << " threads" << endl;
+    cout << "task-based parallelization (C++11 threads) using "<< task_manager->GetNumThreads() << " threads" << endl;
 
 #ifdef USE_NUMA
     numa_run_on_node (0);

@@ -4,7 +4,7 @@
 /* Date:   16. Jan. 02                                                    */
 /**************************************************************************/
 
-#include <ngstd.hpp>
+#include "ngs_core.hpp"
 
 namespace ngstd
 {

@@ -4,7 +4,7 @@
 /* Date:   19. Apr. 2002                                                  */
 /**************************************************************************/
 
-#include <ngstd.hpp>
+#include "ngs_core.hpp"
 /*
 #ifdef PARALLEL
 #include <mpi.h>

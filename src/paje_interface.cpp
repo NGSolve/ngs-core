@@ -4,8 +4,7 @@
 #include <thread>
 #include <atomic>
 
-#include <ngstd.hpp>
-#include "paje_interface.hpp"
+#include "ngs_core.hpp"
 
 #ifdef HAVE_CXA_DEMANGLE
 #include <cxxabi.h>
@@ -36,8 +35,8 @@ namespace ngstd
     max_num_events_per_thread = min2( (size_t)std::numeric_limits<int>::max, max_tracefile_size/bytes_per_event/(2*nthreads+1)*10/7);
     if(max_num_events_per_thread>0)
     {
-      cout << IM(3) << "Tracefile size = " << max_tracefile_size/1024/1024 << "MB." << endl;
-      cout << IM(3) << "Tracing " << max_num_events_per_thread << " events per thread." << endl;
+      cout << "Tracefile size = " << max_tracefile_size/1024/1024 << "MB." << endl;
+      cout << "Tracing " << max_num_events_per_thread << " events per thread." << endl;
     }
     
     tasks.resize(nthreads);
