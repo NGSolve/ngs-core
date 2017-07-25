@@ -140,24 +140,24 @@ namespace ngstd
   template <typename T>
   class AlignedAlloc
   {
-    protected:
-      static void * aligned_malloc(size_t s)
+  protected:
+    static void * aligned_malloc(size_t s)
       {
         // Assume 16 byte alignment of standard library
         if(alignof(T)<=16)
-            return malloc(s);
+          return malloc(s);
         else
-            return  _mm_malloc(s, alignof(T));
+          return _mm_malloc(s, alignof(T));
       }
-
-      static void aligned_free(void *p)
-      {
-        if(alignof(T)<=16)
-            free(p);
-        else
-            _mm_free(p);
-      }
-
+    
+    static void aligned_free(void *p)
+    {
+      if (alignof(T)<=16)
+        free(p);
+      else
+        _mm_free(p);
+    }
+    
   public:
     void * operator new (size_t s, void *p) { return p; }
     void * operator new (size_t s) { return aligned_malloc(s); }
@@ -186,62 +186,14 @@ namespace ngstd
     SIMD (double const * p) { data = _mm256_loadu_pd(p); }
     SIMD (__m256d _data) { data = _data; }
     
-    template<typename T, typename std::enable_if<std::is_convertible<T, std::function<double(int)>>::value, int>::type = 0>                                                                    SIMD (const T & func)
+    template<typename T, typename std::enable_if<std::is_convertible<T, std::function<double(int)>>::value, int>::type = 0>
+      SIMD (const T & func)
     {   
       data = _mm256_set_pd(func(3), func(2), func(1), func(0));              
     }   
     
-    /*
-    template <typename T>
-    SIMD (const T & val)
-    {
-//       SIMD_function(val, std::is_convertible<T, std::function<double(int)>>());
-      SIMD_function(val, has_call_operator<T>::value);
-    }
-    */
-
-    /*
-    template <typename T>
-    SIMD & operator= (const T & val)
-    {
-//       SIMD_function(val, std::is_convertible<T, std::function<double(int)>>());
-      SIMD_function(val, has_call_operator<T>::value);
-      return *this;
-    }
-    */
-    
-    /*
-    void * operator new (size_t s) { return  _mm_malloc(s, 64); }
-    void * operator new[] (size_t s) { return  _mm_malloc(s, 64); }
-    void operator delete (void * p) { _mm_free(p); }
-    void operator delete[] (void * p) { _mm_free(p); }
-    */
-
-    /*
-    template <typename Function>
-    void SIMD_function (const Function & func, std::true_type)
-    {
-      data = _mm256_set_pd(func(3), func(2), func(1), func(0));
-    }
-    
-    // not a function
-    void SIMD_function (double const * p, std::false_type)
-    {
-      data = _mm256_loadu_pd(p);
-    }
-    
-    void SIMD_function (double val, std::false_type)
-    {
-      data = _mm256_set1_pd(val);
-    }
-    
-    void SIMD_function (__m256d _data, std::false_type)
-    {
-      data = _data;
-    }
-    */
-    
     INLINE double operator[] (int i) const { return ((double*)(&data))[i]; }
+    void Store (double * p) { _mm256_storeu_pd(p, data); }
     INLINE __m256d Data() const { return data; }
     INLINE __m256d & Data() { return data; }
   };
